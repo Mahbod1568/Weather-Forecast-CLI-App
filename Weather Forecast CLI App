@@ -1,0 +1,44 @@
+import requests
+
+# Function to get weather data from OpenWeatherMap API
+def get_weather_data(city, api_key):
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    complete_url = f"{base_url}q={city}&appid={api_key}&units=metric"
+
+    try:
+        response = requests.get(complete_url)
+        if response.status_code == 200:
+            data = response.json()
+            return data
+        else:
+            print("Error: City not found or invalid API key.")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+# Function to display weather information
+def display_weather(data):
+    city = data['name']
+    temperature = data['main']['temp']
+    weather_desc = data['weather'][0]['description']
+    humidity = data['main']['humidity']
+    wind_speed = data['wind']['speed']
+
+    print(f"\nWeather in {city}:")
+    print(f"Temperature: {temperature}°C")
+    print(f"Weather: {weather_desc}")
+    print(f"Humidity: {humidity}%")
+    print(f"Wind Speed: {wind_speed} m/s")
+
+# Main function to run the weather forecast CLI app
+def main():
+    api_key = "your_openweathermap_api_key"  # Replace with your OpenWeatherMap API key
+    city = input("Enter the city name: ")
+    
+    data = get_weather_data(city, api_key)
+    if data:
+        display_weather(data)
+
+if __name__ == "__main__":
+    main()
